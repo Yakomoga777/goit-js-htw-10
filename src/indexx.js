@@ -1,6 +1,6 @@
 import './css/styles.css';
 import './components/markup';
-
+import { fetchCountries } from './components/fetchCountries';
 import Notiflix from 'notiflix';
 
 // import _ from 'lodash.debounce';
@@ -21,17 +21,8 @@ function clearMarkup() {
 
 function onTextInput(e) {
   clearMarkup();
-  fetchCountries();
-}
-
-function fetchCountries() {
-  const SEARCH = inputEl.value.trim();
-  const BASE_URL = 'https://restcountries.com/v3.1/';
-  const URL = `${BASE_URL}name/${SEARCH}`;
-  fetch(URL)
-    .then(response => {
-      return response.json();
-    })
+  const search = inputEl.value.trim();
+  fetchCountries(search)
     .then(data => {
       if (data.length > 5) {
         throw new Error(
@@ -53,11 +44,12 @@ function fetchCountries() {
     })
     .catch(error => {});
 }
+
 const createListItem = item => {
   return `<li class="countri-item">
     <img
       src="${item.flags.svg}"
-      alt="flag of${item.name.official}"
+      alt="${item.flags.alt}"
       width="100"
     />
     <p>${item.name.official}</p>
@@ -88,8 +80,9 @@ function createDescription(item) {
     item.languages
   )}</span></p>`;
 }
-const generateDescription = data =>
+function generateDescription(data) {
   data.reduce((acc, item) => acc + createDescription(item), '');
+}
 
 function insertDescription(item) {
   clearMarkup();
