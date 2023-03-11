@@ -1,10 +1,12 @@
 export function fetchCountries(name) {
   const BASE_URL = 'https://restcountries.com/v3.1/';
   const URL = `${BASE_URL}name/${name}?fields=name,capital,population,flags,languages`;
-  // const URL = `https://restcountries.com/v3.1/name/${NAME}?fields=name,capital,population,flags,languages`;
-  return fetch(URL).then(response => {
-    return response.json();
-  });
+  if (name) {
+    return fetch(URL).then(response => {
+      return response.json();
+    });
+  }
+
   // .then(data => {
   //   if (data.length > 5) {
   //     throw new Error(

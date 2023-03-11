@@ -22,27 +22,29 @@ function clearMarkup() {
 function onTextInput(e) {
   clearMarkup();
   const search = inputEl.value.trim();
-  fetchCountries(search)
-    .then(data => {
-      if (data.length > 5) {
-        throw new Error(
-          Notiflix.Notify.info(
-            'Too many matches found. Please enter a more specific name.'
-          )
-        );
-      } else if ((data.length >= 2) & (data.length <= 10)) {
-        insertContent(data);
-      } else if (data.length === 1) {
-        insertDescription(data);
+  if (search) {
+    fetchCountries(search)
+      .then(data => {
+        if (data.length > 5) {
+          throw new Error(
+            Notiflix.Notify.info(
+              'Too many matches found. Please enter a more specific name.'
+            )
+          );
+        } else if ((data.length >= 2) & (data.length <= 10)) {
+          insertContent(data);
+        } else if (data.length === 1) {
+          insertDescription(data);
 
-        console.log('🔥 Країна знайдена!!!');
-      } else if (data.status === 404) {
-        throw new Error(
-          Notiflix.Notify.failure('Oops, there is no country with that name')
-        );
-      }
-    })
-    .catch(error => {});
+          console.log('🔥 Країна знайдена!!!');
+        } else if (data.status === 404) {
+          throw new Error(
+            Notiflix.Notify.failure('Oops, there is no country with that name')
+          );
+        }
+      })
+      .catch(error => {});
+  }
 }
 
 const createListItem = item => {
@@ -81,7 +83,7 @@ function createDescription(item) {
   )}</span></p>`;
 }
 function generateDescription(data) {
-  data.reduce((acc, item) => acc + createDescription(item), '');
+  return data.reduce((acc, item) => acc + createDescription(item), '');
 }
 
 function insertDescription(item) {
